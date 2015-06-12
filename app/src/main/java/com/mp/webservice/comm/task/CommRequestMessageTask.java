@@ -1,4 +1,9 @@
-package com.mp.webservice;
+package com.mp.webservice.comm.task;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.mp.webservice.comm.CommStatusBase;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,10 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-public class CommSendDataTask extends AsyncTask<CommStatusBase, Void, String> {
+public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, String> {
 
 	private boolean _comm_success = false;
 	private SendHttpCompleteCallBack _send_complete = null;
@@ -20,10 +22,10 @@ public class CommSendDataTask extends AsyncTask<CommStatusBase, Void, String> {
 	private static final int TIME_OUT_READ = 10000;
 	
 	public interface SendHttpCompleteCallBack {
-		public void onSendHtttpComplete(boolean isSuccess, String result);
+		void onSendHtttpComplete(boolean isSuccess, String result);
 	}
 
-	public CommSendDataTask(SendHttpCompleteCallBack complete_method) {
+	public CommRequestMessageTask(SendHttpCompleteCallBack complete_method) {
 		super();
 		this._send_complete = complete_method;
 	}

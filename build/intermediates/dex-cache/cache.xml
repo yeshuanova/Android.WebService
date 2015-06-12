@@ -2,53 +2,53 @@
 <items version="2" >
 
     <item
-        jar="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/classes-591af14e7a37e09318b841ef729469b1f7681015.jar" />
-    </item>
-    <item
-        jar="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.1.1/jars/libs/internal_impl-22.1.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="50fd8c7c5556b3516f569f71ed189d61441d59cf">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-566cbf456894b416ad986b96e579a69db3c6d9e8.jar" />
-    </item>
-    <item
-        jar="/Users/PeterLi/android_sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/support-annotations-22.1.1-20ab11626a3d1e93eff9e6d7898b1add26d1ab5e.jar" />
-    </item>
-    <item
-        jar="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/jars/classes.jar"
+        jar="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/classes-16bbbc67094466b02ccbd7c4491ca7191bbf3772.jar" />
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/classes-59f8507870ef7cc3ec9876fd2188236ea17034a7.jar" />
+    </item>
+    <item
+        jar="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/libs/internal_impl-22.1.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-036c216e7e51ee976ac31a9423e43d0e8fe33b24.jar" />
+    </item>
+    <item
+        jar="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/classes-613198ab6a733a50aeb1607bbd39e96606bc9ec7.jar" />
     </item>
     <item
         jar="/Users/PeterLi/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/gson-2.3.1-7b986c9ce858e5f415c5a6a0f163ddf3337f16eb.jar" />
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/gson-2.3.1-7b986c9ce858e5f415c5a6a0f163ddf3337f16eb.jar" />
     </item>
     <item
-        jar="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.1.1/jars/classes.jar"
+        jar="/Users/PeterLi/android_sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/support-annotations-22.1.1-20ab11626a3d1e93eff9e6d7898b1add26d1ab5e.jar" />
+    </item>
+    <item
+        jar="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.1.1/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="fcf32027f88ac0be1b54b16167a30bde06ab6cd1">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/classes-7693e3bc7ac5b316088ebd9afcbf2712068f23ea.jar" />
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/classes-c36dde11ba3aa85957b7198955098e267872ba46.jar" />
     </item>
     <item
-        jar="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/libs/internal_impl-22.1.1.jar"
+        jar="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.1.1/jars/libs/internal_impl-22.1.1.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
-        <dex dex="/Users/PeterLi/AndroidStudioProjects/WebServiceExample/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-67122259cd2f862f5a658d68f0a72f97c3756ed2.jar" />
+        sha1="50fd8c7c5556b3516f569f71ed189d61441d59cf">
+        <dex dex="/Users/PeterLi/AndroidStudioProjects/Android.WebService/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-632a6129e6994d3bcf311f128dc3a40e0cda4d77.jar" />
     </item>
 
 </items>

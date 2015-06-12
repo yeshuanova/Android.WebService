@@ -1,29 +1,31 @@
-package com.mp.webservice;
+package com.mp.webservice.comm;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.mp.webservice.StatusHttpBin;
+import com.mp.webservice.comm.task.CommRequestMessageTask;
 
-public class CommRequest<SendType, ReturnType> implements CommSendDataTask.SendHttpCompleteCallBack {
+public class CommRequestJsonMsg<SendType, ReturnType> implements CommRequestMessageTask.SendHttpCompleteCallBack {
 	private RequestDataCallback<ReturnType> _callback;
 	private TypeToken<SendType> _send_type_token;
 	private TypeToken<ReturnType> _return_type_token;
 	private SendType _send_data;
-	private CommStatusBase _comm_obj = new CommStatusHttpBin();
+	private CommStatusBase _comm_obj = new StatusHttpBin();
 	private RequestDataFinalAction _final_action;
 	
 	public interface RequestDataCallback<ReturnType> {
-		public void onRequestDataSuccess(ReturnType return_data);
-		public void onRequestDataFailed(String fail_msg);
+		void onRequestDataSuccess(ReturnType return_data);
+		void onRequestDataFailed(String fail_msg);
 	}
 	
 	public interface RequestDataFinalAction {
-		public void onRequestFinally(boolean is_success);
+		void onRequestFinally(boolean is_success);
 	}
 	
-	public CommRequest(
+	public CommRequestJsonMsg(
 			SendType send_data,
 			RequestDataCallback<ReturnType> callback,
 			TypeToken<SendType> send_type_token,
@@ -66,7 +68,7 @@ public class CommRequest<SendType, ReturnType> implements CommSendDataTask.SendH
 	public void runSendData() {
 		_comm_obj.setDataString(new Gson().toJson(_send_data, _send_type_token.getType()));
 		
-		CommSendDataTask send_data_http = new CommSendDataTask(this);
+		CommRequestMessageTask send_data_http = new CommRequestMessageTask(this);
 		send_data_http.execute(_comm_obj);
 	}
 

@@ -1,13 +1,13 @@
-package com.mp.webservice;
+package com.mp.webservice.comm;
+
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 public class CommChainManager {
 
-	private List<CommRequest<?, ?>> _request_list;
+	private List<CommRequestJsonMsg<?, ?>> _request_list;
 	private OnRequestChainActionState _action_state = new SequenceState();
 	private OnRequestChainComplete _complete_action = new DefaultRequestChainComplete();
 	private RequestDataFinalAction _request_final_action = new RequestDataFinalAction();
@@ -20,12 +20,12 @@ public class CommChainManager {
 	}
 
 	interface OnRequestChainActionState {
-		public void onStartRunRequestChain(List<CommRequest<?, ?>> list);
-		public void onRunSingleRequestComplete(int next_index, boolean is_success);
+		void onStartRunRequestChain(List<CommRequestJsonMsg<?, ?>> list);
+		void onRunSingleRequestComplete(int next_index, boolean is_success);
 	}
 	
 	public interface OnRequestChainComplete {
-		public void onRequestChainComplete(boolean is_success);
+		void onRequestChainComplete(boolean is_success);
 	}
 	
 	class DefaultRequestChainComplete implements OnRequestChainComplete {
@@ -39,7 +39,7 @@ public class CommChainManager {
 	class SequenceState implements OnRequestChainActionState {
 
 		@Override
-		public void onStartRunRequestChain(List<CommRequest<?, ?>> list) {
+		public void onStartRunRequestChain(List<CommRequestJsonMsg<?, ?>> list) {
 			list.get(0).runSendData();
 		}
 		
@@ -59,7 +59,7 @@ public class CommChainManager {
 	class SequenceContinueState implements OnRequestChainActionState {
 		
 		@Override
-		public void onStartRunRequestChain(List<CommRequest<?, ?>> list) {
+		public void onStartRunRequestChain(List<CommRequestJsonMsg<?, ?>> list) {
 			list.get(0).runSendData();
 		}
 		
@@ -74,8 +74,8 @@ public class CommChainManager {
 	class OverallState implements OnRequestChainActionState {
 
 		@Override
-		public void onStartRunRequestChain(List<CommRequest<?, ?>> list) {
-			for (CommRequest<?, ?> request : _request_list) {
+		public void onStartRunRequestChain(List<CommRequestJsonMsg<?, ?>> list) {
+			for (CommRequestJsonMsg<?, ?> request : _request_list) {
 				request.runSendData();
 			}
 		}
@@ -85,7 +85,7 @@ public class CommChainManager {
 		}
 	}
 	
-	class RequestDataFinalAction implements CommRequest.RequestDataFinalAction {
+	class RequestDataFinalAction implements CommRequestJsonMsg.RequestDataFinalAction {
 
 		private boolean _is_all_success = true;
 		
@@ -130,9 +130,9 @@ public class CommChainManager {
 		_complete_action = callback;
 	}
 	
-	public void addRequest(CommRequest<?, ?> request) {
+	public void addRequest(CommRequestJsonMsg<?, ?> request) {
 		if (null == _request_list) {
-			_request_list = new ArrayList<CommRequest<?, ?>>();
+			_request_list = new ArrayList<CommRequestJsonMsg<?, ?>>();
 		}
 		request.setFinalAction(_request_final_action);
 		_request_list.add(request);
