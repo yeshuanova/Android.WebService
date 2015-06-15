@@ -12,40 +12,33 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.mp.webservice.HttpBinData.HttpBinRequest;
+import com.mp.webservice.HttpBinData.HttpBinResponse;
 import com.mp.webservice.comm.CommChainManager;
 import com.mp.webservice.comm.CommChainManager.MODE;
 import com.mp.webservice.comm.CommProgressDialog;
-import com.mp.webservice.comm.task.CommRequestBitmapTask;
+import com.mp.webservice.comm.CommRequestGetUrlBitmap;
 import com.mp.webservice.comm.CommRequestJsonMsg;
 import com.mp.webservice.comm.CommStatusBase;
 import com.mp.webservice.comm.CommStatusBase.CommType;
-import com.mp.webservice.HttpBinData.HttpBinRequest;
-import com.mp.webservice.HttpBinData.HttpBinResponse;
 
 public class MainActivity extends FragmentActivity {
-	
-	TextView _msg_view;
-	Button _send_get;
-	Button _send_post;
-	ImageView _image_view;
-	Button _get_image;
+
+	private TextView _msg_view;
+	private Button _send_get;
+	private Button _send_post;
+	private ImageView _image_view;
+	private Button _get_image;
+	private Button _request_chain;
+
+	private static String img_url = "http://i.imgur.com/BN8JhJc.jpg";
 	
 	class SendHttpGetListener implements View.OnClickListener {
 
 		@Override
 		public void onClick(View view) {
 			
-			HttpBinRequest request_data = new HttpBinRequest();
-			CommRequestJsonMsg< ?, ?> request = new CommRequestJsonMsg<HttpBinRequest, HttpBinResponse>(
-					request_data,
-					new SendHttpGetCallback(), 
-					new TypeToken<HttpBinRequest>() {},
-					new TypeToken<HttpBinResponse>() {});
-			
-			CommStatusBase http_bin = new StatusHttpBin();
-			http_bin.setHttpType(CommType.HttpGet);
-			http_bin.setURL(getString(R.string.bin_http_get_url));
-			request.setCommObj(http_bin);
+			CommRequestJsonMsg request = getHttpGetRequest();
 			
 			CommChainManager req_mgr = new CommChainManager();
 			req_mgr.setMode(MODE.OVERALL);
@@ -55,12 +48,8 @@ public class MainActivity extends FragmentActivity {
 			dlg.runProgressTask();
 		}
 	}
-	
-	private Gson getFormatGsonBuilder() {
-		return new GsonBuilder().setPrettyPrinting().create();
-	}
-	
-	class SendHttpGetCallback implements CommRequestJsonMsg.RequestDataCallback<HttpBinResponse> {
+
+	class SendHttpGetCallback implements CommRequestJsonMsg.RequestJsonMsgCallback<HttpBinResponse> {
 
 		@Override
 		public void onRequestDataSuccess(HttpBinResponse return_data) {
@@ -78,18 +67,9 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public void onClick(View view) {
-			HttpBinRequest request_data = new HttpBinRequest();
-			CommRequestJsonMsg< ?, ?> request = new CommRequestJsonMsg<HttpBinRequest, HttpBinResponse>(
-					request_data,
-					new SendHttpGetCallback(), 
-					new TypeToken<HttpBinRequest>() {},
-					new TypeToken<HttpBinResponse>() {});
-			
-			StatusHttpBin http_bin = new StatusHttpBin();
-			http_bin.setHttpType(CommType.HttpPost);
-			http_bin.setURL(getString(R.string.bin_http_post_url));
-			request.setCommObj(http_bin);
-			
+
+			CommRequestJsonMsg request = getHttpPostRequest();
+
 			CommChainManager req_mgr = new CommChainManager();
 			req_mgr.setMode(MODE.OVERALL);
 			req_mgr.addRequest(request);
@@ -98,44 +78,87 @@ public class MainActivity extends FragmentActivity {
 			dlg.runProgressTask();
 		}
 	}
-	
-	class SendHttpPostCallback implements CommRequestJsonMsg.RequestDataCallback<HttpBinResponse> {
-
-		@Override
-		public void onRequestDataSuccess(HttpBinResponse return_data) {
-			_msg_view.setText(getFormatGsonBuilder().toJson(return_data));
-		}
-
-		@Override
-		public void onRequestDataFailed(String fail_msg) {
-			_msg_view.setText(fail_msg);
-		}
-		
-	}
 
 	class ClickGetImageBtnListener implements View.OnClickListener {
 
 		@Override
 		public void onClick(View v) {
-
-			CommRequestBitmapTask task = new CommRequestBitmapTask(new GetImageCallback());
-			task.execute("http://i.imgur.com/kggUjvD.jpg");
+			CommRequestGetUrlBitmap request = new CommRequestGetUrlBitmap(img_url, new GetImageAction());
+			request.runSendData();
 		}
 	}
 
-	class GetImageCallback implements CommRequestBitmapTask.CompleteCallBack {
+	class GetImageAction implements CommRequestGetUrlBitmap.IRequestGetUrlBitmapAction {
 
 		@Override
-		public void onGetBitmapComplete(boolean is_success, Bitmap bmp) {
-			if (is_success) {
-				_image_view.setImageBitmap(bmp);
-			} else {
-				Log.w(this.getClass().getName(), "Get Image Error");
-			}
+		public void onSuccess(Bitmap bmp) {
+			_image_view.setImageBitmap(bmp);
+		}
 
+		@Override
+		public void onFailure(String msg) {
+			Log.w(this.getClass().getName(), msg);
 		}
 	}
 
+	class CallRequestChainListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View view) {
+
+			CommRequestGetUrlBitmap req_bmp = new CommRequestGetUrlBitmap(img_url, new GetImageAction());
+			CommRequestJsonMsg req_get = getHttpGetRequest();
+			CommRequestJsonMsg req_post = getHttpPostRequest();
+
+			CommChainManager chain_mgr = new CommChainManager();
+			chain_mgr.setMode(MODE.SEQUENCE);
+			chain_mgr.addRequest(req_get);
+			chain_mgr.addRequest(req_bmp);
+			chain_mgr.addRequest(req_post);
+
+			CommProgressDialog prog_dlg = new CommProgressDialog(MainActivity.this, "Run Request Chain", chain_mgr);
+			prog_dlg.runProgressTask();
+		}
+	}
+
+	private CommRequestJsonMsg getHttpRequest() {
+
+		HttpBinRequest request_data = new HttpBinRequest();
+		CommRequestJsonMsg request = new CommRequestJsonMsg<>(
+				request_data,
+				new SendHttpGetCallback(),
+				new TypeToken<HttpBinRequest>() {},
+				new TypeToken<HttpBinResponse>() {}
+		);
+		return request;
+	}
+
+	private CommRequestJsonMsg getHttpGetRequest() {
+
+		CommRequestJsonMsg request = getHttpRequest();
+		CommStatusBase http_bin = new StatusHttpBin();
+		http_bin.setHttpType(CommType.HttpGet);
+		http_bin.setURL(getString(R.string.bin_http_get_url));
+		request.setCommObj(http_bin);
+
+		return request;
+	}
+
+	private CommRequestJsonMsg getHttpPostRequest() {
+
+		CommRequestJsonMsg request = getHttpRequest();
+
+		StatusHttpBin http_bin = new StatusHttpBin();
+		http_bin.setHttpType(CommType.HttpPost);
+		http_bin.setURL(getString(R.string.bin_http_post_url));
+		request.setCommObj(http_bin);
+
+		return request;
+	}
+
+	private Gson getFormatGsonBuilder() {
+		return new GsonBuilder().setPrettyPrinting().create();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +170,7 @@ public class MainActivity extends FragmentActivity {
 		_send_post = (Button) findViewById(R.id.send_post);
 		_image_view = (ImageView) findViewById(R.id.image_view);
 		_get_image = (Button) findViewById(R.id.get_image);
-
+		_request_chain = (Button) findViewById(R.id.request_chain);
 
 		_send_get.setOnClickListener(new SendHttpGetListener());
 		_send_post.setOnClickListener(new SendHttpPostListener());
@@ -155,6 +178,7 @@ public class MainActivity extends FragmentActivity {
 		_msg_view.setText(getFormatGsonBuilder().toJson(new HttpBinRequest()));
 
 		_get_image.setOnClickListener(new ClickGetImageBtnListener());
+		_request_chain.setOnClickListener(new CallRequestChainListener());
 
 	}
 }

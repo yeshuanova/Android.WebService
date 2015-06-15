@@ -13,23 +13,24 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, String> {
 
 	private boolean _comm_success = false;
-	private SendHttpCompleteCallBack _send_complete = null;
+	private List<ITaskCompleteAction> _complete_notify = new ArrayList<>();
 	private static final int TIME_OUT_CONN = 5000;
 	private static final int TIME_OUT_READ = 10000;
 	
-	public interface SendHttpCompleteCallBack {
-		void onSendHtttpComplete(boolean isSuccess, String result);
+	public interface ITaskCompleteAction {
+		void onTaskComplete(boolean isSuccess, String result);
 	}
 
-	public CommRequestMessageTask(SendHttpCompleteCallBack complete_method) {
+	public CommRequestMessageTask() {
 		super();
-		this._send_complete = complete_method;
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
@@ -83,12 +84,19 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 		
 		return res_str;
 	}
+
+	public void addCompleteNotify(ITaskCompleteAction notify) {
+		if (null == _complete_notify) {
+			_complete_notify = new ArrayList<>();
+		}
+		_complete_notify.add(notify);
+	}
 	
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-		if (null != this._send_complete) {
-			this._send_complete.onSendHtttpComplete(this.isSuccess(), result);
+		for (ITaskCompleteAction notify : _complete_notify) {
+			notify.onTaskComplete(isSuccess(), result);
 		}
 	}
 
