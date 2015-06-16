@@ -90,7 +90,7 @@ public class CommRequestJsonMsg<SendType, ReturnType> extends CommBaseRequest {
 	}
 
 	@Override
-	public void runSendData() {
+	public void runRequest() {
 		_comm_obj.setDataString(new Gson().toJson(_send_data, _send_type_token.getType()));
 
 		CommRequestMessageTask send_data_http = new CommRequestMessageTask();

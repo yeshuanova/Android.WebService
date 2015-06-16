@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onClick(View v) {
 			CommRequestGetUrlBitmap request = new CommRequestGetUrlBitmap(img_url, new GetImageAction());
-			request.runSendData();
+			request.runRequest();
 		}
 	}
 

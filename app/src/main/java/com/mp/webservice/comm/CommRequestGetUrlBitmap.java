@@ -38,7 +38,7 @@ public class CommRequestGetUrlBitmap extends CommBaseRequest {
     }
 
     @Override
-    public void runSendData() {
+    public void runRequest() {
         CommRequestBitmapTask task = new CommRequestBitmapTask();
         task.addCompleteNotify(new TaskActionComplete());
         task.execute(_url_str);

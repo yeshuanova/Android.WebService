@@ -1,3 +1,4 @@
+
 package com.mp.webservice.comm;
 
 import java.util.ArrayList;
@@ -8,12 +9,44 @@ import java.util.List;
  */
 public abstract class CommBaseRequest {
 
-    private List<IRequestDataFinalAction> _final_action_list = new ArrayList<>();
+    /**
+     * A notification list.
+     */
+    private List<IRequestFinalAction> _final_action_list = new ArrayList<>();
 
-    public abstract void runSendData();
 
-    public void addCompleteNotify(IRequestDataFinalAction notify) {
+    /**
+     * A notification interface.
+     */
+    public interface IRequestFinalAction {
+
+        /**
+         * Recall method when request run int
+         *
+         * @param is_success A flag show this request is success or failure.
+         */
+        void onRequestComplete(boolean is_success);
+    }
+
+    /**
+     *  Start running the request action.
+     */
+    public abstract void runRequest();
+
+    /**
+     * Add notify object to observer list.
+     *
+     * @param notify A notify object
+     */
+    public void addCompleteNotify(IRequestFinalAction notify) {
         _final_action_list.add(notify);
+    }
+
+    /**
+     * Clear all completion notify.
+     */
+    public void resetCompleteNotify() {
+        _final_action_list.clear();
     }
 
     /**
@@ -23,12 +56,9 @@ public abstract class CommBaseRequest {
      * @param is_success an checking flag if this request executes successfully.
      */
     protected void runFinalAction(boolean is_success) {
-        for (IRequestDataFinalAction notify : _final_action_list) {
-            notify.onRequestFinally(is_success);
+        for (IRequestFinalAction notify : _final_action_list) {
+            notify.onRequestComplete(is_success);
         }
     }
 
-    public interface IRequestDataFinalAction {
-        void onRequestFinally(boolean is_success);
-    }
 }

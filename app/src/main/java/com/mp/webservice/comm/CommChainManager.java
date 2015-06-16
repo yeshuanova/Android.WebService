@@ -8,7 +8,7 @@ public class CommChainManager {
 
 	private List<CommBaseRequest> _request_list;
 	private OnRequestChainActionState _action_state = new SequenceState();
-	private IRequestDataFinalAction _request_final_action = new IRequestDataFinalAction();
+	private IRequestFinalAction _request_final_action = new IRequestFinalAction();
 	private List<OnRequestChainComplete> _chain_complete_notify_list = new ArrayList<>();	// observer pattern
 	private int _run_index = 0;
 
@@ -31,7 +31,7 @@ public class CommChainManager {
 
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
-			list.get(0).runSendData();
+			list.get(0).runRequest();
 		}
 
 		@Override
@@ -42,7 +42,7 @@ public class CommChainManager {
 			}
 			
 			if (next_index < _request_list.size()) {
-				_request_list.get(next_index).runSendData();
+				_request_list.get(next_index).runRequest();
 			} 
 		}
 	}
@@ -51,13 +51,13 @@ public class CommChainManager {
 		
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
-			list.get(0).runSendData();
+			list.get(0).runRequest();
 		}
 		
 		@Override
 		public void onRunSingleRequestComplete(int next_index, boolean is_success) {
 			if (next_index < _request_list.size()) {
-				_request_list.get(next_index).runSendData();
+				_request_list.get(next_index).runRequest();
 			}
 		}
 	}
@@ -66,7 +66,7 @@ public class CommChainManager {
 
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
-			for (CommBaseRequest request : _request_list) request.runSendData();
+			for (CommBaseRequest request : _request_list) request.runRequest();
 		}
 		
 		@Override
@@ -74,12 +74,12 @@ public class CommChainManager {
 		}
 	}
 	
-	class IRequestDataFinalAction implements CommBaseRequest.IRequestDataFinalAction {
+	class IRequestFinalAction implements CommBaseRequest.IRequestFinalAction {
 
 		private boolean _is_all_success = true;
 		
 		@Override
-		public void onRequestFinally(boolean is_success) {
+		public void onRequestComplete(boolean is_success) {
 			_is_all_success = _is_all_success && is_success;
 
 			++_run_index;
