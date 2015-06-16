@@ -12,16 +12,19 @@ public abstract class CommBaseRequest {
     /**
      * A notification list.
      */
-    private List<IRequestFinalAction> _final_action_list = new ArrayList<>();
-
+    private List<IRequestComplete> _final_action_list = new ArrayList<>();
+    /**
+     * A notification for CommChainManger class.
+     */
+    private IRequestComplete _req_chain_notify;
 
     /**
      * A notification interface.
      */
-    public interface IRequestFinalAction {
+    public interface IRequestComplete {
 
         /**
-         * Recall method when request run int
+         * Recall method when request run completion.
          *
          * @param is_success A flag show this request is success or failure.
          */
@@ -38,7 +41,10 @@ public abstract class CommBaseRequest {
      *
      * @param notify A notify object
      */
-    public void addCompleteNotify(IRequestFinalAction notify) {
+    public void addCompleteNotify(IRequestComplete notify) {
+        if (null == notify) {
+            return;
+        }
         _final_action_list.add(notify);
     }
 
@@ -50,14 +56,29 @@ public abstract class CommBaseRequest {
     }
 
     /**
+     * Set a completion notify for request chain.
+     *
+     * @param notify Request chain complete notify
+     */
+    void setRequestChainFinalNotify(IRequestComplete notify) {
+        _req_chain_notify = notify;
+    }
+
+    /**
      * Call the observer notify when this request is completed.
      * This method must be called manually when running action completion
      *
      * @param is_success an checking flag if this request executes successfully.
      */
-    protected void runFinalAction(boolean is_success) {
-        for (IRequestFinalAction notify : _final_action_list) {
-            notify.onRequestComplete(is_success);
+    protected void runCompleteAction(boolean is_success) {
+        for (IRequestComplete notify : _final_action_list) {
+            if (null != notify) {
+                notify.onRequestComplete(is_success);
+            }
+        }
+
+        if (null != (_req_chain_notify)) {
+            _req_chain_notify.onRequestComplete(is_success);
         }
     }
 

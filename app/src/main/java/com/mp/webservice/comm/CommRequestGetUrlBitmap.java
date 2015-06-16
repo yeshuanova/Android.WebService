@@ -28,7 +28,7 @@ public class CommRequestGetUrlBitmap extends CommBaseRequest {
                 _complete_action.onFailure(msg);
             }
 
-            runFinalAction(is_success); // must called finally
+            runCompleteAction(is_success); // must called finally
         }
     }
 

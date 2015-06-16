@@ -4,30 +4,72 @@ package com.mp.webservice.comm;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A management class for request objects. We can add request object into class
+ * and set three different running modes (Sequence, Sequence_Continue, and Overall)
+ * to control the request running behavior. Finally, the completion notify will be
+ * executed when running task is completed or stopped.
+ */
 public class CommChainManager {
 
-	private List<CommBaseRequest> _request_list;
-	private OnRequestChainActionState _action_state = new SequenceState();
-	private IRequestFinalAction _request_final_action = new IRequestFinalAction();
+	private List<CommBaseRequest> _request_list = new ArrayList<>();
 	private List<OnRequestChainComplete> _chain_complete_notify_list = new ArrayList<>();	// observer pattern
-	private int _run_index = 0;
+	private OnRequestChainActionState _action_state = new SequenceState();
 
+	/**
+	 * Run request mode. (Default is OVERALL)
+	 */
 	public enum MODE {
-		SEQUENCE, // Run requests one by one (Stop when running request failure)
-		SEQUENCE_CONTINUE, // Run requests one by one (Non-Stop when running request failure)
-		OVERALL	// Run all requests at the same time.
+		/**
+		 * Run requests in list one by one. (Stop when running request failure)
+		 */
+		SEQUENCE,
+		/**
+		 * Run requests in list one by one. (Non-Stop when running request failure)
+		 */
+		SEQUENCE_CONTINUE,
+		/**
+		 * Run all requests in list at the same time.
+		 */
+		OVERALL
 	}
 
+	/**
+	 * A interface to execute requests with different running mode.
+	 */
 	private interface OnRequestChainActionState {
+		/**
+		 * Start to run the request list.
+		 * @param list Request list will be run.
+		 */
 		void onStartRunRequestChain(List<CommBaseRequest> list);
+
+		/**
+		 * When one request completes, this method will be called to
+		 * decide next action.
+		 *
+		 * @param next_index Index that will be run in next time.
+		 * @param is_success Flag if running previous request successfully.
+		 */
 		void onRunSingleRequestComplete(int next_index, boolean is_success);
 	}
-	
+
+	/**
+	 * A interface called
+	 */
 	public interface OnRequestChainComplete {
+		/**
+		 * Method that will be called when run list complete.
+		 *
+		 * @param is_success Flag if executing request list successfully.
+		 */
 		void onRequestChainComplete(boolean is_success);
 	}
-	
-	class SequenceState implements OnRequestChainActionState {
+
+	/**
+	 * Running Mode - Sequence State.
+	 */
+	private class SequenceState implements OnRequestChainActionState {
 
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
@@ -37,7 +79,7 @@ public class CommChainManager {
 		@Override
 		public void onRunSingleRequestComplete(int next_index, boolean is_success) {
 			if (!is_success) {
-				runOnRequestChainCompleteNotify(is_success);
+				runRequestChainCompleteNotify(is_success);
 				return;
 			}
 			
@@ -46,8 +88,11 @@ public class CommChainManager {
 			} 
 		}
 	}
-	
-	class SequenceContinueState implements OnRequestChainActionState {
+
+	/**
+	 * Running Mode - Sequence Continue State.
+	 */
+	private class SequenceContinueState implements OnRequestChainActionState {
 		
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
@@ -61,8 +106,11 @@ public class CommChainManager {
 			}
 		}
 	}
-	
-	class OverallState implements OnRequestChainActionState {
+
+	/**
+	 * Running Mode - Overall State.
+	 */
+	private class OverallState implements OnRequestChainActionState {
 
 		@Override
 		public void onStartRunRequestChain(List<CommBaseRequest> list) {
@@ -73,34 +121,45 @@ public class CommChainManager {
 		public void onRunSingleRequestComplete(int next_index, boolean is_success) {
 		}
 	}
-	
-	class IRequestFinalAction implements CommBaseRequest.IRequestFinalAction {
 
+	/**
+	 * Callback to decide action when a request complete.
+	 */
+	private class IRequestComplete implements CommBaseRequest.IRequestComplete {
+
+		/**
+		 * Flag for all request run is success.
+		 */
 		private boolean _is_all_success = true;
-		
+
+		/**
+		 * The index of request will be run.
+		 */
+		private int _run_index = 0;
+
 		@Override
 		public void onRequestComplete(boolean is_success) {
-			_is_all_success = _is_all_success && is_success;
 
+			_is_all_success = _is_all_success && is_success;
 			++_run_index;
-			
+
 			if (_run_index >= _request_list.size()) {
-				runOnRequestChainCompleteNotify(_is_all_success);
+				runRequestChainCompleteNotify(_is_all_success);
 				return;
 			}
 			
 			_action_state.onRunSingleRequestComplete(_run_index, is_success);
 		}
-		
-		public void set_all_success_flag(boolean is_all) {
-			_is_all_success = is_all;
-		}
 	}
 
-	public CommChainManager() {
+	/**
+	 * Constructor
+	 */
+	public CommChainManager() {}
 
-	}
-	
+	/**
+	 * @param mode
+	 */
 	public void setMode(MODE mode) {
 		switch (mode) {
 		case SEQUENCE:
@@ -114,28 +173,45 @@ public class CommChainManager {
 			break;
 		}
 	}
-	
-	public void addOnRequestChainCompleteNotify(OnRequestChainComplete notify) {
+
+	/**
+	 * @param notify
+	 */
+	public void addRequestChainCompleteNotify(OnRequestChainComplete notify) {
+		if (null == notify) {
+			return;
+		}
 		_chain_complete_notify_list.add(notify);
 	}
 
-	protected void runOnRequestChainCompleteNotify(boolean is_success) {
+	/**
+	 * @param is_success
+	 */
+	private void runRequestChainCompleteNotify(boolean is_success) {
 		for (OnRequestChainComplete action : _chain_complete_notify_list) {
 			action.onRequestChainComplete(is_success);
 		}
 	}
-	
+
+	/**
+	 * @param request A request object extends form CommBaseRequest class
+	 */
 	public void addRequest(CommBaseRequest request) {
-		if (null == _request_list) {
-			_request_list = new ArrayList<>();
+		if (null == request) {
+			return;
 		}
-		request.addCompleteNotify(_request_final_action);
 		_request_list.add(request);
 	}
 
+	/**
+	 * Start running request chain.
+	 */
 	public void runRequestChain() {
-		_run_index = 0;
-		_request_final_action._is_all_success = true;
+
+		IRequestComplete final_notify = new IRequestComplete();
+		for (CommBaseRequest action : _request_list) {
+			action.setRequestChainFinalNotify(final_notify);
+		}
 		_action_state.onStartRunRequestChain(_request_list);
 	}
 

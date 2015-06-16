@@ -44,7 +44,7 @@ public class CommRequestJsonMsg<SendType, ReturnType> extends CommBaseRequest {
                 }
             }
 
-            runFinalAction(is_convert_success);
+            runCompleteAction(is_convert_success);
         }
     }
 

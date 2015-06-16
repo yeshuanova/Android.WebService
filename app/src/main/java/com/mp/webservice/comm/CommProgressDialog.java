@@ -65,7 +65,7 @@ public class CommProgressDialog {
 		_prog_dlg.show();
 		_is_delay_finish = false;
 		_is_send_finish = false;
-		_request_manager.addOnRequestChainCompleteNotify(new RequestChainCompleteAction());
+		_request_manager.addRequestChainCompleteNotify(new RequestChainCompleteAction());
 		_request_manager.runRequestChain();
 		(new TimeDelayAsyncTask()).execute(this._delay_time);
 	}
