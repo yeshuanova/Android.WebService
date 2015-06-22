@@ -82,6 +82,7 @@ public class CommRequestBitmapTask extends AsyncTask<String, Void, RequestBitmap
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.connect();
             data._bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+            conn.disconnect();
             _is_success = true;
         } catch (Exception e) {
             Log.w(this.getClass().getName(), e.toString());

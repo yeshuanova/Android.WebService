@@ -16,17 +16,33 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CommRequestMessageTask extended from Android AsyncTask<> requests a message string to server
+ * and responds string message. We use abstract class CommStatusBase to implement connection setting
+ * like url, http get/post, and sending string. When sending message completion, we call all register
+ * interface ITaskCompleteAction to return data.
+ */
 public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, String> {
 
 	private boolean _comm_success = false;
 	private List<ITaskCompleteAction> _complete_notify = new ArrayList<>();
 	private static final int TIME_OUT_CONN = 5000;
 	private static final int TIME_OUT_READ = 10000;
-	
+
+	/**
+	 * Completion callback interface.
+	 */
 	public interface ITaskCompleteAction {
+		/**
+		 * @param isSuccess Running status. (true: success, false: failure)
+		 * @param result Result data string or error message string.
+		 */
 		void onTaskComplete(boolean isSuccess, String result);
 	}
 
+	/**
+	 * Constructor.
+	 */
 	public CommRequestMessageTask() {
 		super();
 	}
@@ -36,6 +52,10 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 		super.onPreExecute();
 	}
 
+	/**
+	 * @param data Connection information object.
+	 * @return Data string (successful) or error message (failure).
+	 */
 	@Override
 	protected String doInBackground(CommStatusBase... data) {
 		String res_str = "";
@@ -63,7 +83,8 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 			} else {
 				conn_url.setDoOutput(false);
 			}
-			
+
+			// Get input stream and convert to data string
 			InputStream input_stream = conn_url.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input_stream, "UTF-8"));
 			StringBuilder builder = new StringBuilder();
@@ -85,6 +106,10 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 		return res_str;
 	}
 
+	/**
+	 * Add notify object to call back list.
+	 * @param notify Notify object implemented with ITaskCompleteAction interface.
+	 */
 	public void addCompleteNotify(ITaskCompleteAction notify) {
 		if (null == _complete_notify) {
 			_complete_notify = new ArrayList<>();
@@ -95,13 +120,10 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
+		// Call all notify list.
 		for (ITaskCompleteAction notify : _complete_notify) {
-			notify.onTaskComplete(isSuccess(), result);
+			notify.onTaskComplete(_comm_success, result);
 		}
-	}
-
-	public boolean isSuccess() {
-		return this._comm_success;
 	}
 
 }
