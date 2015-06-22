@@ -7,4 +7,7 @@
     <string name="bin_http_get_url">http://httpbin.org/get</string>
     <string name="bin_http_post_url">http://httpbin.org/post</string>
 
+    <string name="ublms_api_uid">auth1@tc.program.com.tw</string>
+    <string name="ublms_api_pwd">1qaz2wsx</string>
+
 </resources>

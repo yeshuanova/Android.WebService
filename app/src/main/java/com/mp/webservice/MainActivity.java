@@ -21,6 +21,13 @@ import com.mp.webservice.comm.CommRequestGetUrlBitmap;
 import com.mp.webservice.comm.CommRequestJsonMsg;
 import com.mp.webservice.comm.CommStatusBase;
 import com.mp.webservice.comm.CommStatusBase.CommType;
+import com.mp.webservice.comm.ServerResponse;
+
+import java.io.UnsupportedEncodingException;
+
+import static com.mp.webservice.comm.MessageContainer.ApiLoginRequest;
+import static com.mp.webservice.comm.MessageContainer.ApiLoginResponse;
+//import static com.mp.webservice.comm.MessageContainer.ApiLoginRequest;
 
 public class MainActivity extends FragmentActivity {
 
@@ -76,6 +83,70 @@ public class MainActivity extends FragmentActivity {
 			
 			CommProgressDialog dlg = new CommProgressDialog(MainActivity.this, "Http/Post Connect ...", req_mgr);
 			dlg.runProgressTask();
+		}
+	}
+
+	class ClickCommTestListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View view) {
+			ApiLoginRequest req_data = new ApiLoginRequest();
+			req_data.set_api_uid(getString(R.string.ublms_api_uid));
+			req_data.set_api_pwd(getString(R.string.ublms_api_pwd));
+
+			CommRequestJsonMsg<? , ?> request;
+			request = new CommRequestJsonMsg<>(
+                    req_data,
+                    new CompleteCallback(),
+                    new TypeToken<ApiLoginRequest>() {},
+                    new TypeToken<ServerResponse<ApiLoginResponse>>() {}
+			);
+			request.setCommObj(new UblmsCommStatus());
+			request.runRequest();
+		}
+
+		class CompleteCallback implements CommRequestJsonMsg.RequestJsonMsgCallback<ServerResponse<ApiLoginResponse>> {
+
+			@Override
+			public void onRequestDataSuccess(ServerResponse<ApiLoginResponse> return_data) {
+				String str = new Gson().toJson(return_data);
+				Log.i(getClass().getName(), "Login Response String : \n" + str);
+				_msg_view.setText(str);
+			}
+
+			@Override
+			public void onRequestDataFailed(String fail_msg) {
+				Log.i(getClass().getName(), "Login Response test error :\n" + fail_msg);
+				_msg_view.setText(fail_msg);
+			}
+		}
+
+		class UblmsCommStatus extends CommStatusBase {
+
+			private String _sid = "";
+			private String _api_name = "login";
+			private String _dest_url = "http://59.120.234.78/api/";
+
+			private static final String POST_SID = "sid";
+			private static final String POST_NAME_API = "api";
+			private static final String POST_DATA = "datas";
+			private static final String POST_RESTYPE = "restype";
+			private static final String RESTYPE_JSON = "json";
+
+			@Override
+			public String getSendURL() throws UnsupportedEncodingException {
+				return _dest_url;
+			}
+
+			@Override
+			public String getPostData() {
+				StringBuilder str_builder = new StringBuilder();
+				str_builder.append(POST_SID + "=" + this._sid + "&");
+				str_builder.append(POST_NAME_API + "=" + this._api_name + "&");
+				str_builder.append(POST_DATA + "=" + getDataString() + "&");
+				str_builder.append(POST_RESTYPE + "=" + RESTYPE_JSON);
+				return str_builder.toString();
+			}
 		}
 	}
 
@@ -178,7 +249,9 @@ public class MainActivity extends FragmentActivity {
 		_msg_view.setText(getFormatGsonBuilder().toJson(new HttpBinRequest()));
 
 		_get_image.setOnClickListener(new ClickGetImageBtnListener());
-		_request_chain.setOnClickListener(new CallRequestChainListener());
+//		_request_chain.setOnClickListener(new CallRequestChainListener());
+
+		_request_chain.setOnClickListener(new ClickCommTestListener());
 
 	}
 }
