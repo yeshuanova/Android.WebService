@@ -1,6 +1,8 @@
 
 package com.mp.webservice.comm;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +73,7 @@ public abstract class CommBaseRequest {
      * @param is_success an checking flag if this request executes successfully.
      */
     protected void runCompleteAction(boolean is_success) {
+        Log.i(getClass().getName(), "Run Complete Action");
         for (IRequestComplete notify : _final_action_list) {
             if (null != notify) {
                 notify.onRequestComplete(is_success);

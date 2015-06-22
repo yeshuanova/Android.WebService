@@ -5,18 +5,24 @@ import android.graphics.Bitmap;
 import com.mp.webservice.comm.task.CommRequestBitmapTask;
 
 /**
- * Created by PeterLi on 2015/6/14.
+ * Get Image object from URL. We use CommRequestBitmapTask to get Bitmap object.
  */
 public class CommRequestGetUrlBitmap extends CommBaseRequest {
 
     private String _url_str = "";
     private IRequestGetUrlBitmapAction _complete_action = null;
 
+    /**
+     * Callback interface.
+     */
     public interface IRequestGetUrlBitmapAction {
         void onSuccess(Bitmap bitmap);
         void onFailure(String msg);
     }
 
+    /**
+     * Call back action when get Bitmap from URL completely.
+     */
     class TaskActionComplete implements CommRequestBitmapTask.ActionComplete {
 
         @Override
@@ -28,10 +34,16 @@ public class CommRequestGetUrlBitmap extends CommBaseRequest {
                 _complete_action.onFailure(msg);
             }
 
-            runCompleteAction(is_success); // must called finally
+            runCompleteAction(is_success); // must be called finally
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param url_str Destination URL string.
+     * @param action Call back object.
+     */
     public CommRequestGetUrlBitmap(String url_str, IRequestGetUrlBitmapAction action) {
         this._url_str = url_str;
         this._complete_action = action;
