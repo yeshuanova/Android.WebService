@@ -11,11 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by PeterLi on 2015/6/12.
+ * Encapsulation Result data for CommRequestBitmapTask
  */
-
 class RequestBitmapData {
+    /**
+     * Result Bitmap object.
+     */
     public Bitmap _bitmap;
+    /**
+     * Error message.
+     */
     public String _msg;
 }
 
@@ -24,14 +29,30 @@ public class CommRequestBitmapTask extends AsyncTask<String, Void, RequestBitmap
     private boolean _is_success = false;
     private List<ActionComplete> _complete_notify = new ArrayList<>();
 
+    /**
+     * Callback interface.
+     */
     public interface ActionComplete {
+        /**
+         * @param is_success Action if running successfully. (true: successful, false: exist error)
+         * @param bmp Bitmap object.
+         * @param msg Running message.
+         */
         void onGetBitmapComplete(boolean is_success, Bitmap bmp, String msg);
     }
 
+    /**
+     * Constructor.
+     */
     public CommRequestBitmapTask() {
         super();
     }
 
+    /**
+     * Register complete callback notify.
+     *
+     * @param notify Notify object.
+     */
     public void addCompleteNotify(ActionComplete notify) {
         if (null == _complete_notify) {
             _complete_notify = new ArrayList<>();
@@ -44,9 +65,13 @@ public class CommRequestBitmapTask extends AsyncTask<String, Void, RequestBitmap
         super.onPreExecute();
     }
 
+    /**
+     * @param params URL string.
+     * @return Encapsulation class included Bitmap and message string.
+     */
     @Override
     protected RequestBitmapData doInBackground(String... params) {
-
+        // Get Data stromg
         RequestBitmapData data = new RequestBitmapData();
         data._bitmap = null;
         data._msg = "";
@@ -66,16 +91,17 @@ public class CommRequestBitmapTask extends AsyncTask<String, Void, RequestBitmap
         return data;
     }
 
+    /**
+     * Call all registered notify.
+     *
+     * @param data Encapsulation class included Bitmap and message string.
+     */
     @Override
     protected void onPostExecute(RequestBitmapData data) {
         super.onPostExecute(data);
         for (ActionComplete notify : _complete_notify) {
-            notify.onGetBitmapComplete(isSuccess(), data._bitmap, data._msg);
+            notify.onGetBitmapComplete(_is_success, data._bitmap, data._msg);
         }
-    }
-
-    public boolean isSuccess() {
-        return _is_success;
     }
 
 }
