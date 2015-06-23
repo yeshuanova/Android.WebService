@@ -13,7 +13,7 @@ import java.util.List;
 public class CommChainManager {
 
 	private List<CommBaseRequest> _request_list = new ArrayList<>();
-	private List<OnRequestChainComplete> _chain_complete_notify_list = new ArrayList<>();	// observer pattern
+	private List<OnRequestChainComplete> _chain_complete_notify_list = new ArrayList<>();
 	private OnRequestChainActionState _action_state = new SequenceState();
 
 	/**
@@ -59,7 +59,7 @@ public class CommChainManager {
 	 */
 	public interface OnRequestChainComplete {
 		/**
-		 * Method that will be called when run list complete.
+		 * Method that will be called when running list completion.
 		 *
 		 * @param is_success Flag if executing request list successfully.
 		 */
@@ -158,7 +158,8 @@ public class CommChainManager {
 	public CommChainManager() {}
 
 	/**
-	 * @param mode
+	 * Set running mode.
+	 * @param mode Running Mode.
 	 */
 	public void setMode(MODE mode) {
 		switch (mode) {
@@ -175,7 +176,8 @@ public class CommChainManager {
 	}
 
 	/**
-	 * @param notify
+	 * Add notification object will be called when request completion.
+	 * @param notify Notification object.
 	 */
 	public void addRequestChainCompleteNotify(OnRequestChainComplete notify) {
 		if (null == notify) {
@@ -185,7 +187,8 @@ public class CommChainManager {
 	}
 
 	/**
-	 * @param is_success
+	 * Run completed notification.
+	 * @param is_success True if all requests are successful, or false if one of requests is failure.
 	 */
 	private void runRequestChainCompleteNotify(boolean is_success) {
 		for (OnRequestChainComplete action : _chain_complete_notify_list) {
@@ -194,6 +197,7 @@ public class CommChainManager {
 	}
 
 	/**
+	 * Add a request object.
 	 * @param request A request object extends form CommBaseRequest class
 	 */
 	public void addRequest(CommBaseRequest request) {
@@ -204,7 +208,7 @@ public class CommChainManager {
 	}
 
 	/**
-	 * Start running request chain.
+	 * Start to run request chain.
 	 */
 	public void runRequestChain() {
 

@@ -1,24 +1,31 @@
 package com.mp.webservice;
 
+import android.util.Log;
+
 import com.mp.webservice.comm.CommStatusBase;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class StatusHttpBin extends CommStatusBase {
 
 	public static final String DATA_KEY = "json_str";
 	
-	public String getSendURL() throws UnsupportedEncodingException {
-		if (isHttpGet()) {
-			return getURL() + "?" + DATA_KEY + "=" + URLEncoder.encode(getDataString(), "UTF-8");
+	public String getRequestURL() {
+		String send_str = getOriginalURL();
+		try {
+			if (isHttpGet()) {
+				return getOriginalURL() + "?" + DATA_KEY + "=" + URLEncoder.encode(getDataString(), "UTF-8");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.w(this.getClass().getName(), e.toString());
 		}
-		return _url;
+		return send_str;
 	}
 	
-	public String getPostData() {
+	public String getPostString() {
 		if (isHttpPost()) {
-			return DATA_KEY + "=" + _data_str;
+			return DATA_KEY + "=" + getDataString();
 		}
 		return "";
 	}

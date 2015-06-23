@@ -64,8 +64,8 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 			
 			CommStatusBase comm_data = data[0];
 			
-			Log.i(this.getClass().getName(), "URL : " + comm_data.getSendURL());
-			URL url = new URL(comm_data.getSendURL());
+			Log.i(this.getClass().getName(), "URL : " + comm_data.getRequestURL());
+			URL url = new URL(comm_data.getRequestURL());
 			HttpURLConnection conn_url = (HttpURLConnection)url.openConnection();
 			conn_url.setConnectTimeout(TIME_OUT_CONN);
 			conn_url.setReadTimeout(TIME_OUT_READ);
@@ -75,8 +75,8 @@ public class CommRequestMessageTask extends AsyncTask<CommStatusBase, Void, Stri
 				conn_url.setDoOutput(true);
 				OutputStream os = conn_url.getOutputStream();
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-				Log.i(this.getClass().getName(), "POST DATA : " + comm_data.getPostData());
-				writer.write(comm_data.getPostData());
+				Log.i(this.getClass().getName(), "POST DATA : " + comm_data.getPostString());
+				writer.write(comm_data.getPostString());
 				writer.flush();
 				writer.close();
 				os.close();

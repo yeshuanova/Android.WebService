@@ -138,7 +138,7 @@ public class MainActivity extends FragmentActivity {
 		CommRequestJsonMsg request = getHttpRequest();
 		CommStatusBase http_bin = new StatusHttpBin();
 		http_bin.setHttpType(CommType.HttpGet);
-		http_bin.setURL(getString(R.string.bin_http_get_url));
+		http_bin.setOriginalURL(getString(R.string.bin_http_get_url));
 		request.setCommObj(http_bin);
 
 		return request;
@@ -150,7 +150,7 @@ public class MainActivity extends FragmentActivity {
 
 		StatusHttpBin http_bin = new StatusHttpBin();
 		http_bin.setHttpType(CommType.HttpPost);
-		http_bin.setURL(getString(R.string.bin_http_post_url));
+		http_bin.setOriginalURL(getString(R.string.bin_http_post_url));
 		request.setCommObj(http_bin);
 
 		return request;

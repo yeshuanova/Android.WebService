@@ -6,8 +6,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Created by PeterLi on 2015/6/15.
+ * CommBaseRequest is abstract class of running requests. It define running and completing interface,
+ * and completion notification list. Inheritance class must implement runRequest() method to start run action.
+ *
+ * @author Peter.Li
  */
 public abstract class CommBaseRequest {
 
@@ -39,9 +43,9 @@ public abstract class CommBaseRequest {
     public abstract void runRequest();
 
     /**
-     * Add notify object to observer list.
+     * Add notification object to completed notification list.
      *
-     * @param notify A notify object
+     * @param notify Notification object
      */
     public void addCompleteNotify(IRequestComplete notify) {
         if (null == notify) {
@@ -51,23 +55,23 @@ public abstract class CommBaseRequest {
     }
 
     /**
-     * Clear all completion notify.
+     * Clear all completed notifications.
      */
     public void resetCompleteNotify() {
         _final_action_list.clear();
     }
 
     /**
-     * Set a completion notify for request chain.
+     * Set a completed notification for request chain.
      *
-     * @param notify Request chain complete notify
+     * @param notify Completion notification.
      */
     void setRequestChainFinalNotify(IRequestComplete notify) {
         _req_chain_notify = notify;
     }
 
     /**
-     * Call the observer notify when this request is completed.
+     * Call the observer notification when this request is completed.
      * This method must be called manually when running action completion
      *
      * @param is_success an checking flag if this request executes successfully.

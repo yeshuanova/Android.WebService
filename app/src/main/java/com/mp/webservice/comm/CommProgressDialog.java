@@ -6,14 +6,20 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Window;
 
+/**
+ * CommProgressDialog show progressing dialog when sending data.
+ */
 public class CommProgressDialog {
 	
-	private ProgressDialog _prog_dlg = null;
+	private ProgressDialog _progress_dlg = null;
 	private CommChainManager _request_manager;
 	private int _delay_time = 2000;
 	private boolean _is_send_finish = false;
 	private boolean _is_delay_finish = false;
-	
+
+	/**
+	 * RequestChainCompleteAction is called when request chain is completed.
+	 */
 	class RequestChainCompleteAction implements CommChainManager.OnRequestChainComplete {
 
 		@Override
@@ -24,6 +30,9 @@ public class CommProgressDialog {
 		}
 	}
 
+	/**
+	 * TimeDelayAsyncTask run delay action using setting delay time.
+	 */
 	class TimeDelayAsyncTask extends AsyncTask<Integer, Void, Void> {
 
 		@Override
@@ -43,26 +52,43 @@ public class CommProgressDialog {
 			checkFinish();
 		}
 	}
-	
+
+	/**
+	 * Constructor.
+	 * @param context Context object.
+	 * @param msg Message string that show in dialog box.
+	 * @param manager Running chain object.
+	 */
 	public CommProgressDialog(Context context, String msg, CommChainManager manager) {
-		_prog_dlg = new ProgressDialog(context);
-		_prog_dlg.setCancelable(false);
-		_prog_dlg.setCanceledOnTouchOutside(false);
-		_prog_dlg.setMessage(msg);
-		_prog_dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		_progress_dlg = new ProgressDialog(context);
+		_progress_dlg.setCancelable(false);
+		_progress_dlg.setCanceledOnTouchOutside(false);
+		_progress_dlg.setMessage(msg);
+		_progress_dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		_request_manager = manager;
 	}
 
+	/**
+	 * Get minimum delay time.
+	 * @return Minimum delay time (millisecond).
+	 */
 	public int get_delay_time() {
 		return _delay_time;
 	}
 
+	/**
+	 * Set minimum delay time of showing progress dialog.
+	 * @param _delay_time Minimum delay time (millisecond).
+	 */
 	public void set_delay_time(int _delay_time) {
 		this._delay_time = _delay_time;
 	}
 
+	/**
+	 * Start to show progress dialog and run CommChainManager object.
+	 */
 	public void runProgressTask() {
-		_prog_dlg.show();
+		_progress_dlg.show();
 		_is_delay_finish = false;
 		_is_send_finish = false;
 		_request_manager.addRequestChainCompleteNotify(new RequestChainCompleteAction());
@@ -70,9 +96,12 @@ public class CommProgressDialog {
 		(new TimeDelayAsyncTask()).execute(this._delay_time);
 	}
 
+	/**
+	 * Check if the the progress completion. If all conditions are satisfied, progress dialog will be closed.
+	 */
 	protected void checkFinish() {
 		if (_is_send_finish && _is_delay_finish) {
-			_prog_dlg.dismiss();
+			_progress_dlg.dismiss();
 		}
 	}
 
