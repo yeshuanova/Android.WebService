@@ -1,5 +1,5 @@
 
-package com.mp.webservice.comm;
+package webservice;
 
 import android.util.Log;
 

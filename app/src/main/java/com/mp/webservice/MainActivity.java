@@ -14,13 +14,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mp.webservice.HttpBinData.HttpBinRequest;
 import com.mp.webservice.HttpBinData.HttpBinResponse;
-import com.mp.webservice.comm.CommChainManager;
-import com.mp.webservice.comm.CommChainManager.MODE;
-import com.mp.webservice.comm.CommProgressDialog;
-import com.mp.webservice.comm.CommRequestGetUrlBitmap;
-import com.mp.webservice.comm.CommRequestJsonMsg;
-import com.mp.webservice.comm.CommStatusBase;
-import com.mp.webservice.comm.CommStatusBase.CommType;
+import webservice.CommChainManager;
+import webservice.CommChainManager.MODE;
+import webservice.CommProgressDialog;
+import webservice.CommRequestGetUrlBitmap;
+import webservice.CommRequestJsonMsg;
+import webservice.CommStatusBase;
+import webservice.CommStatusBase.CommType;
 
 public class MainActivity extends FragmentActivity {
 

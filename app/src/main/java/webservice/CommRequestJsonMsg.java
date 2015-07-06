@@ -1,11 +1,11 @@
-package com.mp.webservice.comm;
+package webservice;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.mp.webservice.comm.task.CommRequestMessageTask;
+import webservice.task.CommRequestMessageTask;
 
 /**
  * A Network Request that sends json format data to server and gets .

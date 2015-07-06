@@ -1,9 +1,9 @@
-package com.mp.webservice.comm.task;
+package webservice.task;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mp.webservice.comm.CommStatusBase;
+import webservice.CommStatusBase;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

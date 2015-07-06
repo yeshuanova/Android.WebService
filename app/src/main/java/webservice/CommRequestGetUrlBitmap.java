@@ -1,8 +1,8 @@
-package com.mp.webservice.comm;
+package webservice;
 
 import android.graphics.Bitmap;
 
-import com.mp.webservice.comm.task.CommRequestBitmapTask;
+import webservice.task.CommRequestBitmapTask;
 
 /**
  * Get Image object from URL. We use CommRequestBitmapTask to get Bitmap object.

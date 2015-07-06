@@ -2,7 +2,7 @@ package com.mp.webservice;
 
 import android.util.Log;
 
-import com.mp.webservice.comm.CommStatusBase;
+import webservice.CommStatusBase;
 
 import java.net.URLEncoder;
 

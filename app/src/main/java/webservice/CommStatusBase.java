@@ -1,4 +1,4 @@
-package com.mp.webservice.comm;
+package webservice;
 
 /**
  * CommStatusBase is abstract base class that defined some method that will be called on CommRequestMessageTask.

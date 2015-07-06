@@ -1,4 +1,4 @@
-package com.mp.webservice.comm.task;
+package webservice.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
