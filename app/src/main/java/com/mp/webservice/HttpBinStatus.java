@@ -2,19 +2,28 @@ package com.mp.webservice;
 
 import android.util.Log;
 
-import webservice.CommStatusBase;
-
 import java.net.URLEncoder;
 
-public class StatusHttpBin extends CommStatusBase {
+import webservice.CommBaseStatus;
+
+public class HttpBinStatus extends CommBaseStatus {
 
 	public static final String DATA_KEY = "json_str";
+	private String _data_str = "";
+
+	public HttpBinStatus() {
+
+	}
+
+	public void setDataString(String str) {
+		_data_str = str;
+	}
 	
 	public String getRequestURL() {
 		String send_str = getOriginalURL();
 		try {
 			if (isHttpGet()) {
-				return getOriginalURL() + "?" + DATA_KEY + "=" + URLEncoder.encode(getDataString(), "UTF-8");
+				return getOriginalURL() + "?" + DATA_KEY + "=" + URLEncoder.encode(_data_str, "UTF-8");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -25,7 +34,7 @@ public class StatusHttpBin extends CommStatusBase {
 	
 	public String getPostString() {
 		if (isHttpPost()) {
-			return DATA_KEY + "=" + getDataString();
+			return DATA_KEY + "=" + _data_str;
 		}
 		return "";
 	}

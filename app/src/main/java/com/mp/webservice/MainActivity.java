@@ -14,22 +14,18 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mp.webservice.HttpBinData.HttpBinRequest;
 import com.mp.webservice.HttpBinData.HttpBinResponse;
+
+import webservice.CommBaseStatus.CommType;
 import webservice.CommChainManager;
 import webservice.CommChainManager.MODE;
 import webservice.CommProgressDialog;
 import webservice.CommRequestGetUrlBitmap;
 import webservice.CommRequestJsonMsg;
-import webservice.CommStatusBase;
-import webservice.CommStatusBase.CommType;
 
 public class MainActivity extends FragmentActivity {
 
 	private TextView _msg_view;
-	private Button _send_get;
-	private Button _send_post;
 	private ImageView _image_view;
-	private Button _get_image;
-	private Button _request_chain;
 
 	private static String img_url = "http://i.imgur.com/BN8JhJc.jpg";
 	
@@ -84,7 +80,12 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onClick(View v) {
 			CommRequestGetUrlBitmap request = new CommRequestGetUrlBitmap(img_url, new GetImageAction());
-			request.runRequest();
+			CommChainManager req_mgr = new CommChainManager();
+			req_mgr.setMode(MODE.OVERALL);
+			req_mgr.addRequest(request);
+
+			CommProgressDialog dlg = new CommProgressDialog(MainActivity.this, "Loading image ...", req_mgr);
+			dlg.runProgressTask();
 		}
 	}
 
@@ -121,37 +122,43 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	private CommRequestJsonMsg getHttpRequest() {
+	class ResetDataClickListener implements View.OnClickListener {
 
-		HttpBinRequest request_data = new HttpBinRequest();
-		CommRequestJsonMsg request = new CommRequestJsonMsg<>(
-				request_data,
-				new SendHttpGetCallback(),
-				new TypeToken<HttpBinRequest>() {},
-				new TypeToken<HttpBinResponse>() {}
-		);
-		return request;
+		@Override
+		public void onClick(View v) {
+			_image_view.setImageBitmap(null);
+			_msg_view.setText("");
+		}
 	}
 
 	private CommRequestJsonMsg getHttpGetRequest() {
 
-		CommRequestJsonMsg request = getHttpRequest();
-		CommStatusBase http_bin = new StatusHttpBin();
+		HttpBinStatus http_bin = new HttpBinStatus();
 		http_bin.setHttpType(CommType.HttpGet);
 		http_bin.setOriginalURL(getString(R.string.bin_http_get_url));
-		request.setCommObj(http_bin);
+		http_bin.setDataString(new Gson().toJson(new HttpBinRequest()));
+
+		CommRequestJsonMsg request = new CommRequestJsonMsg<>(
+				new SendHttpGetCallback(),
+				new TypeToken<HttpBinResponse>(){},
+				http_bin
+		);
 
 		return request;
 	}
 
 	private CommRequestJsonMsg getHttpPostRequest() {
 
-		CommRequestJsonMsg request = getHttpRequest();
-
-		StatusHttpBin http_bin = new StatusHttpBin();
+		HttpBinStatus http_bin = new HttpBinStatus();
 		http_bin.setHttpType(CommType.HttpPost);
 		http_bin.setOriginalURL(getString(R.string.bin_http_post_url));
-		request.setCommObj(http_bin);
+		http_bin.setDataString(new Gson().toJson(new HttpBinRequest()));
+
+		CommRequestJsonMsg request = new CommRequestJsonMsg<>(
+				new SendHttpGetCallback(),
+				new TypeToken<HttpBinResponse>(){},
+				http_bin
+		);
 
 		return request;
 	}
@@ -166,11 +173,13 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		
 		_msg_view = (TextView) findViewById(R.id.msg_text);
-		_send_get = (Button) findViewById(R.id.send_get);
-		_send_post = (Button) findViewById(R.id.send_post);
+		Button _send_get = (Button) findViewById(R.id.send_get);
+		Button _send_post = (Button) findViewById(R.id.send_post);
+
 		_image_view = (ImageView) findViewById(R.id.image_view);
-		_get_image = (Button) findViewById(R.id.get_image);
-		_request_chain = (Button) findViewById(R.id.request_chain);
+
+		Button _get_image = (Button) findViewById(R.id.get_image);
+		Button _request_chain = (Button) findViewById(R.id.request_chain);
 
 		_send_get.setOnClickListener(new SendHttpGetListener());
 		_send_post.setOnClickListener(new SendHttpPostListener());
@@ -179,6 +188,9 @@ public class MainActivity extends FragmentActivity {
 
 		_get_image.setOnClickListener(new ClickGetImageBtnListener());
 		_request_chain.setOnClickListener(new CallRequestChainListener());
+
+		Button _reset_btn = (Button)findViewById(R.id.reset_data);
+		_reset_btn.setOnClickListener(new ResetDataClickListener());
 
 	}
 }
