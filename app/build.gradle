@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.mp.webservice"
+        applicationId "csl.ws.example"
         minSdkVersion 16
         targetSdkVersion 22
     }
@@ -20,6 +20,6 @@ android {
 
 dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v13:22.1.1'
 }

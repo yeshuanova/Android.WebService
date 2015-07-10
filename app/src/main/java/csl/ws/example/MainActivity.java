@@ -1,4 +1,4 @@
-package com.mp.webservice;
+package csl.ws.example;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.mp.webservice.HttpBinData.HttpBinRequest;
-import com.mp.webservice.HttpBinData.HttpBinResponse;
+import csl.ws.example.HttpBinData.HttpBinRequest;
+import csl.ws.example.HttpBinData.HttpBinResponse;
+
+import com.mp.webservice.R;
 
 import webservice.CommBaseStatus.CommType;
 import webservice.CommChainManager;

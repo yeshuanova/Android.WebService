@@ -1,4 +1,4 @@
-package com.mp.webservice;
+package csl.ws.example;
 
 import android.util.Log;
 
