@@ -1,8 +1,8 @@
 package csl.ws.example;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,11 +12,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import csl.ws.example.HttpBinData.HttpBinRequest;
-import csl.ws.example.HttpBinData.HttpBinResponse;
-
 import com.mp.webservice.R;
 
+import csl.ws.example.HttpBinData.HttpBinRequest;
+import csl.ws.example.HttpBinData.HttpBinResponse;
 import webservice.CommBaseStatus.CommType;
 import webservice.CommChainManager;
 import webservice.CommChainManager.MODE;
@@ -24,7 +23,7 @@ import webservice.CommProgressDialog;
 import webservice.CommRequestGetUrlBitmap;
 import webservice.CommRequestJsonMsg;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
 	private TextView _msg_view;
 	private ImageView _image_view;
